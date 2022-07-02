@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+
+{% block title %}Main page{% endblock %}
+
+{% block body %}
+    <h1 class="text-center">Contacts</h1>
+    <br>
+    <form class="form-inline" action="/search/">
+        {% for field in form %}
+            <label class="sr-only" for="name">{{ field.label }}</label>
+            <div class="input-group mb-2 mr-sm-2 ml-auto">
+                {{ field|add_class:'form-control' }}
+
+                {% for error in field.errors %}
+                    <span class="text-danger">{{ error }}</span>
+                {% endfor %}
+            </div>
+        {% endfor %}
+
+        <button type="submit" class="btn btn-primary mb-2">Search</button>
+    </form>
+    <br>
+    {% if empty %}
+        <h2 class="text-center text-danger">No found entries</h2>
+    {% endif %}
+
+    {% for entry in entries %}
+        <div class="card" style="width: 18rem;">
+            <div class="card-body">
+                <h5 class="card-title"> {{ entry.author }} ({{ entry.email }})</h5>
+                <p class="card-text">{{ entry.text }}</p>
+                <a href="{% url 'update' entry.pk %}" class="card-link btn btn-primary">Edit</a>
+                <a href="{{ entry.text }}" class="card-link btn btn-danger"  data-toggle="modal" data-target="#modal{{ entry.pk }}">Delete</a>
+            </div>
+        </div>
+
+        <!-- Modal -->
+        <div class="modal fade" id="modal{{ entry.pk }}" tabindex="-1" role="dialog"
+             aria-labelledby="modal{{ entry.pk }}Label"
+             aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Delete entry from {{ entry.author }}?</h5>
+                    </div>
+                    <div class="modal-body">
+                        <p><b>Email</b> <br> {{ entry.email }}</p>
+                        <p><b>Entry text:</b> <br> {{ entry.text }}</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                        <form action="/delete/{{ entry.pk }}">
+                            <button type="submit" class="btn btn-danger">Delete</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <br>
+    {% endfor %}
+{% endblock %}
