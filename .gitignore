@@ -1,0 +1,11 @@
+.idea
+*.pyc
+__pycache__
+venv/
+*.sqlite3
+.DS_Store
+*.log
+/source/webapp/migrations/0001_initial.py
+/source/webapp/static/css/bootstrap.min.css
+/source/webapp/static/js/bootstrap.min.js
+/source/webapp/static/js/jquery.min.js
